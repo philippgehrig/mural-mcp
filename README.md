@@ -4,6 +4,8 @@ Mural board management for Claude Code via MCP. Extract, update, create, and que
 
 ## Features
 
+- **List boards** — browse boards by workspace or room, search by title
+- **List rooms** — discover rooms within a workspace
 - **Extract** — fetch full board content as structured JSON
 - **Summary** — get a compact overview (areas, widget counts, tags)
 - **Query** — filter widgets by area, type, or text content
@@ -16,40 +18,77 @@ Mural board management for Claude Code via MCP. Extract, update, create, and que
 - A Mural account with API access
 - A Mural OAuth app (client ID + secret)
 
-### Creating a Mural OAuth App
+## Creating a Mural OAuth App
 
-1. Go to https://app.mural.co/me/apps
-2. Click "Create new app"
-3. Set the redirect URI to `http://localhost:9876/callback`
-4. Note your **Client ID** and **Client Secret**
+### Step 1: Open account settings
+
+Click your profile icon in the top-right corner of Mural and select **More account options**.
+
+![Account menu](docs/01-account-menu.png)
+
+### Step 2: Navigate to My Apps
+
+In the settings sidebar, click **My apps**, then click the **New app** button.
+
+![My apps page](docs/02-my-apps.png)
+
+### Step 3: Register your app
+
+Fill in:
+- **App name** — any name you like (e.g., `claude-mural`)
+- **Redirect URL** — must be exactly: `http://localhost:9876/callback`
+
+Click **Save and continue**.
+
+![Register app dialog](docs/03-register-app.png)
+
+### Step 4: Copy your credentials
+
+After saving, you'll see your **Client ID** and **Client Secret**. Copy both — the client secret is only shown once (you can reset it later if needed).
+
+![App credentials](docs/04-app-credentials.png)
+
+### Step 5: Configure scopes
+
+Enable the following scopes for full functionality:
+
+**Read Scopes** (all enabled by default):
+- `rooms:read`
+- `users:read`
+- `workspaces:read`
+- `murals:read`
+- `identity:read`
+- `templates:read`
+
+**Write Scopes** (enable these):
+- `rooms:write`
+- `workspaces:write`
+- `murals:write`
+- `templates:write`
+
+![Authorization scopes](docs/05-scopes.png)
+
+Click **Save** when done.
 
 ## Installation
 
-### As a Claude Code Plugin (Marketplace)
+### As a Claude Code Plugin
 
-Add the marketplace, then install the plugin:
+Add the marketplace and install:
 
 ```bash
-claude /plugin marketplace add https://github.com/philippgehrig/mural-mcp.git
-claude /plugin add mural
+/plugin marketplace add https://github.com/philippgehrig/mural-mcp.git
+/plugin install mural
 ```
 
 During installation you'll be prompted for:
-- **Mural OAuth Client ID** — from your Mural app
-- **Mural OAuth Client Secret** — from your Mural app
+- **Mural OAuth Client ID** — from Step 4 above
+- **Mural OAuth Client Secret** — from Step 4 above
 - **Default workspace** (optional) — auto-detected from board URLs if not set
-
-### Direct Plugin Install
-
-If you have the repo cloned locally:
-
-```bash
-claude /plugin add /path/to/mural-mcp
-```
 
 ### Manual MCP Configuration
 
-Add to your `.claude/settings.json` or project `.mcp.json`:
+Add to your `~/.claude/.mcp.json`:
 
 ```json
 {
@@ -76,6 +115,8 @@ If authentication expires, the next tool call will automatically trigger a fresh
 
 | Tool | Description |
 |------|-------------|
+| `mural_list_boards` | List or search boards by workspace/room, with optional title filter |
+| `mural_list_rooms` | List rooms in a workspace |
 | `mural_extract_board` | Fetch all widgets from a board as structured JSON |
 | `mural_summary` | Get area names, widget counts, and tags |
 | `mural_query_widgets` | Filter widgets by area, type, or text |
