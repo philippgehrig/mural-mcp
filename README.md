@@ -1,93 +1,105 @@
 # mural-mcp
 
+Mural board management for Claude Code via MCP. Extract, update, create, and query Mural boards directly from your Claude Code sessions.
 
+## Features
 
-## Getting started
+- **Extract** — fetch full board content as structured JSON
+- **Summary** — get a compact overview (areas, widget counts, tags)
+- **Query** — filter widgets by area, type, or text content
+- **Update** — sync changes to a board (desired-state or explicit operations)
+- **Create** — create new boards with templates or custom specs
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Prerequisites
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- Node.js >= 22
+- A Mural account with API access
+- A Mural OAuth app (client ID + secret)
 
-## Add your files
+### Creating a Mural OAuth App
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://git.swf.i.mercedes-benz.com/pgehrig/mural-mcp.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-* [Set up project integrations](https://git.swf.i.mercedes-benz.com/pgehrig/mural-mcp/-/settings/integrations)
-
-## Collaborate with your team
-
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+1. Go to https://app.mural.co/me/apps
+2. Click "Create new app"
+3. Set the redirect URI to `http://localhost:9876/callback`
+4. Note your **Client ID** and **Client Secret**
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+### As a Claude Code Plugin (Marketplace)
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Add the marketplace, then install the plugin:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```bash
+claude /plugin marketplace add https://github.com/philippgehrig/mural-mcp.git
+claude /plugin add mural
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+During installation you'll be prompted for:
+- **Mural OAuth Client ID** — from your Mural app
+- **Mural OAuth Client Secret** — from your Mural app
+- **Default workspace** (optional) — auto-detected from board URLs if not set
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+### Direct Plugin Install
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+If you have the repo cloned locally:
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```bash
+claude /plugin add /path/to/mural-mcp
+```
+
+### Manual MCP Configuration
+
+Add to your `.claude/settings.json` or project `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "mural": {
+      "command": "node",
+      "args": ["/path/to/mural-mcp/dist/index.js"],
+      "env": {
+        "MURAL_CLIENT_ID": "your-client-id",
+        "MURAL_CLIENT_SECRET": "your-client-secret"
+      }
+    }
+  }
+}
+```
+
+## Authentication
+
+On first use, the plugin opens your browser for OAuth authorization. The token is cached at `~/.mural-mcp/token.json` and reused until expiry.
+
+If authentication expires, the next tool call will automatically trigger a fresh OAuth flow.
+
+## Available Tools
+
+| Tool | Description |
+|------|-------------|
+| `mural_extract_board` | Fetch all widgets from a board as structured JSON |
+| `mural_summary` | Get area names, widget counts, and tags |
+| `mural_query_widgets` | Filter widgets by area, type, or text |
+| `mural_update_board` | Apply changes (desired-state diff or explicit create/update/delete) |
+| `mural_create_board` | Create a new board with initial content |
+
+## Development
+
+```bash
+npm install
+npm run build
+npm run dev      # run with tsx (no build needed)
+npm test         # run tests
+```
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `MURAL_CLIENT_ID` | OAuth app client ID | (required) |
+| `MURAL_CLIENT_SECRET` | OAuth app client secret | (required) |
+| `MURAL_WORKSPACE` | Default workspace ID | (auto-detected) |
+| `MURAL_CALLBACK_PORT` | OAuth callback port | `9876` |
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+MIT

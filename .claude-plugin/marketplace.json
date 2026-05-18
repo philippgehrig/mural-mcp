@@ -1,4 +1,15 @@
 {
-  "featured": false,
-  "categories": ["productivity", "collaboration"]
+  "name": "mural-mcp",
+  "owner": {
+    "name": "Philipp Gehrig",
+    "url": "https://github.com/philippgehrig"
+  },
+  "plugins": [
+    {
+      "name": "mural",
+      "source": "./",
+      "description": "Mural board management for Claude Code. Extract, update, create, and query Mural boards.",
+      "version": "0.1.0"
+    }
+  ]
 }
