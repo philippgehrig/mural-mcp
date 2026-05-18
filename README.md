@@ -24,13 +24,13 @@ Mural board management for Claude Code via MCP. Extract, update, create, and que
 
 Click your profile icon in the top-right corner of Mural and select **More account options**.
 
-![Account menu](docs/01-account-menu.png)
+![Account menu](docs/assets/01-account-menu.png)
 
 ### Step 2: Navigate to My Apps
 
 In the settings sidebar, click **My apps**, then click the **New app** button.
 
-![My apps page](docs/02-my-apps.png)
+![My apps page](docs/assets/02-my-apps.png)
 
 ### Step 3: Register your app
 
@@ -40,13 +40,13 @@ Fill in:
 
 Click **Save and continue**.
 
-![Register app dialog](docs/03-register-app.png)
+![Register app dialog](docs/assets/03-register-app.png)
 
 ### Step 4: Copy your credentials
 
 After saving, you'll see your **Client ID** and **Client Secret**. Copy both — the client secret is only shown once (you can reset it later if needed).
 
-![App credentials](docs/04-app-credentials.png)
+![App credentials](docs/assets/04-app-credentials.png)
 
 ### Step 5: Configure scopes
 
@@ -66,7 +66,7 @@ Enable the following scopes for full functionality:
 - `murals:write`
 - `templates:write`
 
-![Authorization scopes](docs/05-scopes.png)
+![Authorization scopes](docs/assets/05-scopes.png)
 
 Click **Save** when done.
 
