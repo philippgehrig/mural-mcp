@@ -6,6 +6,7 @@ import { registerQueryTool } from "./tools/query.js";
 import { registerUpdateTool } from "./tools/update.js";
 import { registerCreateTool } from "./tools/create.js";
 import { registerListTool } from "./tools/list.js";
+import { registerListRoomsTool } from "./tools/rooms.js";
 
 const server = new McpServer({
   name: "mural",
@@ -18,6 +19,7 @@ registerQueryTool(server);
 registerUpdateTool(server);
 registerCreateTool(server);
 registerListTool(server);
+registerListRoomsTool(server);
 
 async function main() {
   const transport = new StdioServerTransport();

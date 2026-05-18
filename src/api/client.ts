@@ -179,11 +179,11 @@ export class MuralClient {
       title,
     })) as Record<string, unknown>;
     const board = unwrapItem(resp);
+    const boardId = board.id as string;
+    const [workspace, numericId] = boardId.split(".");
     return {
-      id: board.id as string,
-      url: board.visitorsSettings
-        ? `https://app.mural.co/t/-/m/-/${board.id}`
-        : `https://app.mural.co/t/-/m/-/${board.id}`,
+      id: boardId,
+      url: `https://app.mural.co/t/${workspace}/m/${workspace}/${numericId}`,
     };
   }
 }

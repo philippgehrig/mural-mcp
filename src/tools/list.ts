@@ -14,15 +14,16 @@ interface MuralListItem {
 export function registerListTool(server: McpServer) {
   server.tool(
     "mural_list_boards",
-    "List Mural boards in a workspace or room.",
+    "List or search Mural boards in a workspace or room. Use 'title' to filter by name (case-insensitive substring match).",
     {
       workspaceId: z.string().optional().describe("Workspace ID to list boards from"),
       roomId: z.string().optional().describe("Room ID to list boards from (alternative to workspaceId)"),
+      title: z.string().optional().describe("Filter boards by title (case-insensitive substring match)"),
       status: z.enum(["active", "archived"]).optional().describe("Filter by status (default: active)"),
       sortBy: z.enum(["lastCreated", "lastModified", "oldest"]).optional().describe("Sort order"),
       limit: z.number().optional().describe("Max results per page (default: 50)"),
     },
-    async ({ workspaceId, roomId, status, sortBy, limit }) => {
+    async ({ workspaceId, roomId, title, status, sortBy, limit }) => {
       if (!workspaceId && !roomId) {
         const client = new MuralClient();
         const resp = (await client.request("GET", "/workspaces")) as Record<string, unknown>;
@@ -61,12 +62,22 @@ export function registerListTool(server: McpServer) {
         nextPath = (resp.next as string) || null;
       }
 
-      const summary = allMurals.map((m) => ({
-        id: m.id,
-        title: m.title,
-        status: m.status,
-        url: `https://app.mural.co/t/-/m/-/${m.id}`,
-      }));
+      if (title) {
+        const search = title.toLowerCase();
+        allMurals = allMurals.filter((m) =>
+          m.title?.toLowerCase().includes(search)
+        );
+      }
+
+      const summary = allMurals.map((m) => {
+        const [workspace, numericId] = m.id.split(".");
+        return {
+          id: m.id,
+          title: m.title,
+          status: m.status,
+          url: `https://app.mural.co/t/${workspace}/m/${workspace}/${numericId}`,
+        };
+      });
 
       return {
         content: [{
