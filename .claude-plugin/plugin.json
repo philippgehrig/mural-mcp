@@ -1,0 +1,31 @@
+{
+  "name": "mural",
+  "version": "0.1.0",
+  "description": "Mural board management for Claude Code. Extract, update, create, and query Mural boards.",
+  "author": {
+    "name": "Philipp Gehrig"
+  },
+  "repository": "https://git.swf.i.mercedes-benz.com/pgehrig/mural-mcp",
+  "license": "MIT",
+  "keywords": ["mural", "whiteboard", "mcp", "collaboration"],
+  "userConfig": {
+    "mural_client_id": {
+      "type": "string",
+      "title": "Mural OAuth Client ID",
+      "description": "OAuth app client ID from https://app.mural.co/me/apps",
+      "required": true
+    },
+    "mural_client_secret": {
+      "type": "string",
+      "title": "Mural OAuth Client Secret",
+      "description": "OAuth app client secret",
+      "sensitive": true,
+      "required": true
+    },
+    "mural_workspace": {
+      "type": "string",
+      "title": "Default workspace",
+      "description": "Default Mural workspace ID (optional, auto-detected from URLs)"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "mural": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/dist/index.js"],
+      "env": {
+        "MURAL_CLIENT_ID": "${user_config.mural_client_id}",
+        "MURAL_CLIENT_SECRET": "${user_config.mural_client_secret}",
+        "MURAL_WORKSPACE": "${user_config.mural_workspace}"
+      }
+    }
+  }
+}
