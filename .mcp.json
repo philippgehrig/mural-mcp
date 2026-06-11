@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "mural": {
-      "command": "npx",
-      "args": ["tsx", "${CLAUDE_PLUGIN_ROOT}/src/index.ts"],
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/dist/index.js"],
       "env": {
         "MURAL_CLIENT_ID": "${user_config.mural_client_id}",
         "MURAL_CLIENT_SECRET": "${user_config.mural_client_secret}",

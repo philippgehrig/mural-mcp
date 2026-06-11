@@ -1,5 +1,6 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
+import * as os from "node:os";
 import * as http from "node:http";
 import * as crypto from "node:crypto";
 import * as url from "node:url";
@@ -18,8 +19,7 @@ interface TokenData {
 }
 
 function getTokenPath(): string {
-  const home = process.env.HOME || process.env.USERPROFILE || "~";
-  return path.join(home, ".mural-mcp", "token.json");
+  return path.join(os.homedir(), ".mural-mcp", "token.json");
 }
 
 function readCachedToken(): TokenData | null {
@@ -110,11 +110,8 @@ async function runOAuthFlow(
         scope: "murals:read murals:write workspaces:read",
       });
       const authUrl = `${AUTH_URL}?${params.toString()}`;
-      open(authUrl).catch(() => {
-        console.error(
-          `Open this URL in your browser:\n${authUrl}`,
-        );
-      });
+      console.error(`Opening browser for Mural authorization...\nIf it doesn't open, visit:\n${authUrl}`);
+      open(authUrl).catch(() => {});
     });
 
     setTimeout(() => {
