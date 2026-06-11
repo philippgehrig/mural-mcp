@@ -10,7 +10,7 @@ import { registerListRoomsTool } from "./tools/rooms.js";
 
 const server = new McpServer({
   name: "mural",
-  version: "0.1.0",
+  version: "0.1.1",
 });
 
 registerExtractTool(server);

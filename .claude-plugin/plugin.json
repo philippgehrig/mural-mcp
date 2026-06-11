@@ -1,6 +1,6 @@
 {
   "name": "mural",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Mural board management for Claude Code. Extract, update, create, and query Mural boards.",
   "author": {
     "name": "Philipp Gehrig"

@@ -9,7 +9,7 @@
       "name": "mural",
       "source": "./",
       "description": "Mural board management for Claude Code. Extract, update, create, and query Mural boards.",
-      "version": "0.1.0"
+      "version": "0.1.1"
     }
   ]
 }
