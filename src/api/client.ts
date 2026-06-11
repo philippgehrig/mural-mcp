@@ -12,30 +12,6 @@ const MAX_RETRIES = 3;
 const RETRY_BACKOFF = [1000, 2000, 4000];
 const REQUEST_TIMEOUT = 30_000;
 
-async function getProxyDispatcher(): Promise<unknown | undefined> {
-  const proxyUrl =
-    process.env.HTTPS_PROXY ||
-    process.env.https_proxy ||
-    process.env.HTTP_PROXY ||
-    process.env.http_proxy;
-  if (!proxyUrl) return undefined;
-  try {
-    // @ts-ignore — undici is bundled with Node 22+ at runtime
-    const { ProxyAgent } = await import(/* webpackIgnore: true */ "undici");
-    return new ProxyAgent(proxyUrl);
-  } catch {
-    return undefined;
-  }
-}
-
-let proxyDispatcher: unknown | undefined;
-async function ensureProxyDispatcher(): Promise<unknown | undefined> {
-  if (proxyDispatcher === undefined) {
-    proxyDispatcher = (await getProxyDispatcher()) ?? null;
-  }
-  return proxyDispatcher ?? undefined;
-}
-
 function unwrapList(data: Record<string, unknown>): unknown[] {
   if (Array.isArray(data.value)) return data.value;
   if (Array.isArray(data.data)) return data.data;
@@ -72,7 +48,6 @@ export class MuralClient {
       const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
       try {
-        const dispatcher = await ensureProxyDispatcher();
         const resp = await fetch(url, {
           method,
           headers: {
@@ -82,8 +57,7 @@ export class MuralClient {
           },
           body: body ? JSON.stringify(body) : undefined,
           signal: controller.signal,
-          ...(dispatcher ? { dispatcher } : {}),
-        } as RequestInit);
+        });
 
         clearTimeout(timeout);
 

@@ -7,12 +7,10 @@ import { registerUpdateTool } from "./tools/update.js";
 import { registerCreateTool } from "./tools/create.js";
 import { registerListTool } from "./tools/list.js";
 import { registerListRoomsTool } from "./tools/rooms.js";
-
 const server = new McpServer({
-  name: "mural",
-  version: "0.2.0",
+    name: "mural",
+    version: "0.2.0",
 });
-
 registerExtractTool(server);
 registerSummaryTool(server);
 registerQueryTool(server);
@@ -20,13 +18,12 @@ registerUpdateTool(server);
 registerCreateTool(server);
 registerListTool(server);
 registerListRoomsTool(server);
-
 async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
 }
-
 main().catch((err) => {
-  console.error("Fatal:", err);
-  process.exit(1);
+    console.error("Fatal:", err);
+    process.exit(1);
 });
+//# sourceMappingURL=index.js.map
