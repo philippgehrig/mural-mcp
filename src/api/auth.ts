@@ -13,6 +13,22 @@ const CALLBACK_PORT = parseInt(process.env.MURAL_CALLBACK_PORT || "9876", 10);
 const REDIRECT_URI = `http://localhost:${CALLBACK_PORT}/callback`;
 const CACHE_MARGIN_SECONDS = 60;
 
+async function getProxyDispatcher(): Promise<unknown | undefined> {
+  const proxyUrl =
+    process.env.HTTPS_PROXY ||
+    process.env.https_proxy ||
+    process.env.HTTP_PROXY ||
+    process.env.http_proxy;
+  if (!proxyUrl) return undefined;
+  try {
+    // @ts-ignore — undici is bundled with Node 22+ at runtime
+    const { ProxyAgent } = await import(/* webpackIgnore: true */ "undici");
+    return new ProxyAgent(proxyUrl);
+  } catch {
+    return undefined;
+  }
+}
+
 interface TokenData {
   access_token: string;
   expires_at: number;
@@ -134,11 +150,13 @@ async function exchangeCode(
     redirect_uri: REDIRECT_URI,
   });
 
+  const dispatcher = await getProxyDispatcher();
   const resp = await fetch(TOKEN_URL, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString(),
-  });
+    ...(dispatcher ? { dispatcher } : {}),
+  } as RequestInit);
 
   if (!resp.ok) {
     const text = await resp.text();
